@@ -36,8 +36,8 @@ describe('lazy-bouncer routes', () => {
   afterAll(() => {
     pool.end();
   });
-
   it('creates a new user', async () => {
+  
     const res = await request(app).post('/api/v1/users').send(mockUser);
     const { firstName, lastName, email } = mockUser;
 
@@ -51,8 +51,9 @@ describe('lazy-bouncer routes', () => {
 
   it('returns the current user', async () => {
     const [agent, user] = await registerAndLogin();
+    
     const me = await agent.get('/api/v1/users/me');
-
+    
     expect(me.body).toEqual({
       ...user,
       exp: expect.any(Number),
@@ -62,7 +63,7 @@ describe('lazy-bouncer routes', () => {
 
   it('should return a 401 when signed out and listing all users', async () => {
     const res = await request(app).get('/api/v1/users');
-
+    
     expect(res.body).toEqual({
       message: 'You must be signed in to continue',
       status: 401,
@@ -74,7 +75,7 @@ describe('lazy-bouncer routes', () => {
     const res = await agent.get('/api/v1/users');
 
     expect(res.body).toEqual({
-      message: 'You do not have access to view this page',
+      message: 'access denied',
       status: 403,
     });
   });
